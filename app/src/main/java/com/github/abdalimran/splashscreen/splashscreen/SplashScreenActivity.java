@@ -18,8 +18,11 @@ import java.util.TimerTask;
 
 
 public class SplashScreenActivity extends Activity {
-    final static int SPLASH_TIME_OUT = 3000;
+    final static int SPLASH_TIME_OUT = 4000;
+    private boolean scheduled = false;
+    private Timer timer;
 
+    @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         Window window = getWindow();
@@ -48,7 +51,7 @@ public class SplashScreenActivity extends Activity {
         splashimg.clearAnimation();
         splashimg.startAnimation(anim);
 
-        Timer timer = new Timer();
+        timer = new Timer();
         timer.schedule(new TimerTask(){
             @Override
             public void run() {
@@ -56,5 +59,16 @@ public class SplashScreenActivity extends Activity {
                 startActivity(home_page);
                 finish();
             }}, SPLASH_TIME_OUT);
+        this.scheduled=true;
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        if (this.scheduled) {
+            this.timer.cancel();
+        }
+        this.timer.purge();
     }
 }
